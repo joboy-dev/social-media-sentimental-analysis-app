@@ -60,14 +60,14 @@ if sentiments:
 
         for batch in batch_data:
             batch_id = batch.id
-            data = [
+            clean_data = [
                 {
                     "text": d["text"],
                     "label": d["label"],
                     "label_id": d["label_id"]
                 } for d in batch.data
             ]
-            df = pd.DataFrame(data)
+            df = pd.DataFrame(clean_data)
 
             with st.expander(f"Analysis of {len(batch.data)} reviews conducted on {batch.created_at}"):
                 subtab1, subtab2 = st.tabs(['Chart', 'Table'])

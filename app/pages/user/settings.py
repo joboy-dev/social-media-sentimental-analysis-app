@@ -78,21 +78,21 @@ with tab2:
 
 with tab3:
     st.subheader("Change Profile Picture")
-    with st.form('change_profile_picture'):
-        st.image(st.session_state.current_user.profile_picture, width=150)
-        # uploaded_file = file_upload_component(db, label="Upload Picture", allowed_types=["png", "jpg", "jpeg"])
-        uploaded_file = st.file_uploader("Upload Picture", type=["png", "jpg", "jpeg"])
+    
+    st.image(st.session_state.current_user.profile_picture, width=150)
+    uploaded_file = st.file_uploader("Upload Picture", type=["png", "jpg", "jpeg"])
+    
+    if uploaded_file is not None:
+        st.success(generate_message("File uploaded successfully"))
+
+        # Display Image
+        if uploaded_file.type.startswith("image/"):
+            st.image(uploaded_file, caption="Uploaded Image", width=150)
         
-        if uploaded_file is not None:
-            st.success(generate_message("File uploaded successfully"))
-
-            # Display Image
-            if uploaded_file.type.startswith("image/"):
-                st.image(uploaded_file, caption="Uploaded Image", width=150)
-            
-        else:
-            st.warning(generate_message("Please upload a file.", "warning"))
-
+    else:
+        st.warning(generate_message("Please upload a file.", "warning"))
+        
+    with st.form('change_profile_picture'):
         edit_profile_submit = st.form_submit_button("Save Changes", type='primary')
 
         if edit_profile_submit:

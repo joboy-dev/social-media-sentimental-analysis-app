@@ -1,3 +1,4 @@
+import time
 from typing import Any, Optional
 from sqlalchemy.orm import Session
 import streamlit as st
@@ -34,6 +35,8 @@ class UserService:
         db.commit()
         db.refresh(user)
         st.success(generate_message("Password updated successfully", "success"))
+        time.sleep(0.5)
+        st.rerun()
     
     
     def update_profile(self, db: Session, name: Optional[str], email: Optional[str], profile_picture_file: Optional[Any]):
@@ -72,6 +75,8 @@ class UserService:
         st.session_state['current_user'] = user
         
         st.success(generate_message("Profile updated successfully", "success"))
+        time.sleep(0.5)
+        st.rerun()
 
 
 user_service = UserService()

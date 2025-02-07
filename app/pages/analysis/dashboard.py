@@ -1,4 +1,4 @@
-from pprint import pprint
+from uuid import uuid4
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -16,12 +16,12 @@ st.title('📊 Dashboard')
 # Display sentiment history
 sentiments = sentiment_analysis_service.get_all(db)
 
-if sentiments:
-    data = [
-        {"text": sentiment.text, "label": sentiment.label_str, "label_id": sentiment.label}
-        for sentiment in sentiments if sentiment.user_id == st.session_state.current_user.id
-    ]
-    
+data = [
+    {"text": sentiment.text, "label": sentiment.label_str, "label_id": sentiment.label}
+    for sentiment in sentiments if sentiment.user_id == st.session_state.current_user.id
+]
+
+if data:
     batch_sentiments = sentiment_analysis_service.get_all_batch(db)
     
     batch_data = [
@@ -42,13 +42,13 @@ if sentiments:
         with col1:
             st.subheader("Bar Chart")
             bar_chart = px.bar(sentiment_counts, x="label", y="count", color="label", title="Sentiment Count")
-            st.plotly_chart(bar_chart, use_container_width=True)
+            st.plotly_chart(bar_chart, use_container_width=True, key=uuid4().hex)
 
         # Pie Chart
         with col2:
             st.subheader("Pie Chart")
             pie_chart = px.pie(sentiment_counts, names="label", values="count", title="Sentiment Distribution")
-            st.plotly_chart(pie_chart, use_container_width=True)
+            st.plotly_chart(pie_chart, use_container_width=True, key=uuid4().hex)
 
 
     with tab2:
@@ -82,13 +82,13 @@ if sentiments:
                     with col1:
                         st.subheader("Bar Chart")
                         bar_chart = px.bar(sentiment_counts, x="label", y="count", color="label", title="Sentiment Count")
-                        st.plotly_chart(bar_chart, use_container_width=True)
+                        st.plotly_chart(bar_chart, use_container_width=True, key=uuid4().hex)
 
                     # Pie Chart
                     with col2:
                         st.subheader("Pie Chart")
                         pie_chart = px.pie(sentiment_counts, names="label", values="count", title="Sentiment Distribution")
-                        st.plotly_chart(pie_chart, use_container_width=True)
+                        st.plotly_chart(pie_chart, use_container_width=True, key=uuid4().hex)
                 
                 with subtab2:
                     st.write(f"**Detailed Analysis**")

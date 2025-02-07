@@ -57,13 +57,9 @@ with tab2:
         
         doc = st.text_area('Text (separated by a new line)', height=200)
         
-        submit_batch_button = st.form_submit_button("Batch Analysis", type='primary')
+        submit_batch_text_button = st.form_submit_button("Batch Analysis", type='primary')
         
-        if submit_batch_button:
-            # Start processing in the background
-            # thread = threading.Thread(target=batch_analysis, args=(doc,))
-            # thread.start()
-            
+        if submit_batch_text_button:
             # st.success(generate_message("Batch analysis started"))
             threading.Thread(target=lambda: sentiment_analysis_service.batch_analysis(db, doc, user.id)).start()
             st.success(generate_message("Batch analysis started"))
@@ -75,33 +71,33 @@ with tab2:
     st.subheader('Upload file to do batch sentimental analysis all at once')
     st.write('The file should contain reviews for your brand products each separated by a new line')
     
-    with st.form('file_batch_analysis_form'):
-        file = st.file_uploader("Upload CSV file", type=["txt", "pdf"])
-        doc = None
-        
-        if file is not None:
-            # Read CSV
-            # if file.type == "text/csv":
-            #     import pandas as pd
-            #     df = pd.read_csv(file)
-            #     st.write("📊 Preview of CSV:")
-            #     st.dataframe(df, height=2000, use_container_width=True)
+    file = st.file_uploader("Upload CSV file", type=["txt", "pdf"])
+    doc = None
+    
+    if file is not None:
+        # Read CSV
+        # if file.type == "text/csv":
+        #     import pandas as pd
+        #     df = pd.read_csv(file)
+        #     st.write("📊 Preview of CSV:")
+        #     st.dataframe(df, height=2000, use_container_width=True)
 
-            # Read Text File
-            if file.type == "text/plain":
-                content = file.read().decode("utf-8")
-                doc = st.text_area("📜 File Content", content, height=200, disabled=True)
-            
-            # Read PDF
-            elif file.type == "application/pdf":
-                import PyPDF2
-                reader = PyPDF2.PdfReader(file)
-                text = "\n".join([page.extract_text() for page in reader.pages if page.extract_text()])
-                doc = st.text_area("📜 Extracted PDF Text", text, height=200, disabled=True)
-            
-        else:
-            st.warning(generate_message("Please upload a file.", "warning"))
+        # Read Text File
+        if file.type == "text/plain":
+            content = file.read().decode("utf-8")
+            doc = st.text_area("📜 File Content", content, height=200, disabled=True)
         
+        # Read PDF
+        elif file.type == "application/pdf":
+            import PyPDF2
+            reader = PyPDF2.PdfReader(file)
+            text = "\n".join([page.extract_text() for page in reader.pages if page.extract_text()])
+            doc = st.text_area("📜 Extracted PDF Text", text, height=200, disabled=True)
+        
+    else:
+        st.warning(generate_message("Please upload a file.", "warning"))
+        
+    with st.form('file_batch_analysis_form'):
         submit_batch_button = st.form_submit_button("Batch Analysis", type='primary')
         
         if submit_batch_button:

@@ -169,3 +169,12 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# othets
+.history
+.streamlit
+*.db
+tmp
+utils/serviceAccount.json
+utils/firebase_config.py
+models/*.ftz

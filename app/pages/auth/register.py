@@ -1,9 +1,10 @@
 import streamlit as st
 
+from database.conn import load_db
 from services.auth_service import auth_service
 
 
-db = st.session_state['db']
+db = load_db()
 
 st.title("🔐 Register")
 
@@ -14,7 +15,7 @@ with st.form("register_form"):
     password = st.text_input("Password", type="password", placeholder="Enter a secure password").strip()
     confirm_password = st.text_input("Confirm Password", type="password", placeholder="Enter a secure password").strip()
     
-    submit = st.form_submit_button("Register")
+    submit = st.form_submit_button("Register", type='primary')
 
 # Handle form submission
 if submit:

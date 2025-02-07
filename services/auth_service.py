@@ -16,6 +16,12 @@ class AuthService:
     def is_authenticated(self):
         return st.session_state.get("current_user", None)
     
+    def protect_page(self):
+        if not self.is_authenticated():
+            st.error(generate_message("You need to be logged in to access this page.", "error"))
+            time.sleep(1)
+            st.switch_page(st.Page('app/pages/auth/login.py'))
+    
     def hash_password(self, password: str):
         return pwd_context.hash(password)
     

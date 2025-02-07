@@ -13,4 +13,12 @@ class SentimentAnalysis(BaseTableModel):
     
     user_id = sa.Column(sa.String, sa.ForeignKey("users.id"), nullable=False)
     user = relationship("User", back_populates="sentiments")
+
+
+class BatchSentimentAnalysis(BaseTableModel):
+    __tablename__ = "batch_sentiments"
     
+    data = sa.Column(sa.JSON, nullable=False)
+    
+    user_id = sa.Column(sa.String, sa.ForeignKey("users.id"), nullable=False)
+    user = relationship("User", back_populates="batch_sentiments")

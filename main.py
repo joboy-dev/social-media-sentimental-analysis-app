@@ -2,7 +2,6 @@ import time
 import fasttext, streamlit as st
 from database.conn import create_database, load_db
 from app.run import load_pages
-from services.fasttext_prediction_service import fasttext_prediction
 from utils.messages import generate_message
 
 

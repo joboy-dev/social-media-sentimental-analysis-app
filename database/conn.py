@@ -43,6 +43,6 @@ def load_db():
     if "db" not in st.session_state:
         st.session_state.db = next(get_db())
 
-    # db = st.session_state['db']
-    # # print("Loaded database session:", db)  # Uncomment to debug session state in console
-    # return db
+    db = st.session_state['db']
+    # print("Loaded database session:", db)  # Uncomment to debug session state in console
+    return db

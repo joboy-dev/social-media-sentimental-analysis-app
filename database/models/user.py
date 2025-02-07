@@ -14,6 +14,7 @@ class User(BaseTableModel):
     profile_picture = sa.Column(sa.String(255), nullable=True)
     
     sentiments = relationship("SentimentAnalysis", back_populates="user")
+    batch_sentiments = relationship("BatchSentimentAnalysis", back_populates="user")
 
 
 def user_after_insert(mapper, connection, target):

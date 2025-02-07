@@ -1,10 +1,12 @@
 import streamlit as st
+from database.conn import load_db
 from services.user_service import user_service
 from utils.messages import generate_message
+from services.auth_service import auth_service
 
 
-db = st.session_state['db']
-
+auth_service.protect_page()
+db = load_db()
 current_user = st.session_state.current_user
 
 st.title('👤⚙️ Profile Settings')
@@ -68,7 +70,7 @@ with tab2:
         name = st.text_input("Full Name", value=current_user.name).strip()
         email = st.text_input("Email", value=current_user.email).strip()
         
-        edit_profile_submit = st.form_submit_button("Save Changes")
+        edit_profile_submit = st.form_submit_button("Save Changes", type='primary')
 
     if edit_profile_submit:
         user_service.update_profile(db, name=name, email=email, profile_picture_file=None)
@@ -91,7 +93,7 @@ with tab3:
         else:
             st.warning(generate_message("Please upload a file.", "warning"))
 
-        edit_profile_submit = st.form_submit_button("Save Changes")
+        edit_profile_submit = st.form_submit_button("Save Changes", type='primary')
 
         if edit_profile_submit:
             user_service.update_profile(db, name=None, email=None, profile_picture_file=uploaded_file)
@@ -105,7 +107,7 @@ with tab4:
         new_password = st.text_input("New Password", type='password', placeholder="Enter a secure password").strip()
         confirm_password = st.text_input("Confirm Password", type='password', placeholder="Enter a secure password").strip()
         
-        update_password_submit = st.form_submit_button("Save Changes")
+        update_password_submit = st.form_submit_button("Save Changes", type='primary')
 
     if update_password_submit:
         user_service.change_password(db, email=email, old=old_password, new=new_password, confirm=confirm_password)

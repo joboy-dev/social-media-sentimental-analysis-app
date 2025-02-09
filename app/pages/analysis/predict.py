@@ -4,6 +4,7 @@ import threading
 from database.conn import load_db
 from services.sentiment_analysis_service import sentiment_analysis_service
 from services.fasttext_prediction_service import fasttext_prediction
+from services.custom_model_prediction_service import custom_prediction_service
 from utils.messages import generate_message
 from services.auth_service import auth_service
 
@@ -16,6 +17,16 @@ st.title('📈 Predict Sentimental Analysis')
 
 tab1, tab2 = st.tabs(['Single', 'Batch'])
 
+# Add option to select model
+MODELS = {
+    'FastText': fasttext_prediction.make_prediction,
+    'Custom': custom_prediction_service.make_prediction
+}
+selected_model = st.sidebar.radio('Prediction models', MODELS.keys())
+
+# Assign the selected model function to a variable
+predict_function = MODELS[selected_model]
+    
 with tab1:
     # Prediction form
     st.subheader("Enter text to predict sentiment")
@@ -25,8 +36,12 @@ with tab1:
 
     # Handle form submission
     if submit:
+        # try:
+        print(selected_model)
+        
         # Make prediction
-        prediction_str, prediction = fasttext_prediction.make_prediction(text)
+        # prediction_str, prediction = fasttext_prediction.make_prediction(text)
+        prediction_str, prediction = predict_function(text)
         
         # Save prediction to database
         sentiment_analysis_service.create(
@@ -44,7 +59,9 @@ with tab1:
             st.error(f"Predicted sentiment: {prediction_str}")
         else:
             st.info(f"Predicted sentiment: {prediction_str}")
-    
+        # except Exception as e:
+        #     db.rollback()
+        #     st.error(generate_message('An unexpected error occured. Try again later', 'error'))
 
 with tab2:
     # def add_text_to_doc_list(doc: List, test: str):
@@ -60,8 +77,10 @@ with tab2:
         submit_batch_text_button = st.form_submit_button("Batch Analysis", type='primary')
         
         if submit_batch_text_button:
+            print(selected_model)
             # st.success(generate_message("Batch analysis started"))
-            threading.Thread(target=lambda: sentiment_analysis_service.batch_analysis(db, doc, user.id)).start()
+            # threading.Thread(target=lambda: sentiment_analysis_service.batch_analysis(db, doc, user.id)).start()
+            threading.Thread(target=lambda: sentiment_analysis_service.batch_analysis(db, doc, user.id, predict_function)).start()
             st.success(generate_message("Batch analysis started"))
             
         
@@ -102,5 +121,6 @@ with tab2:
         
         if submit_batch_button:
             # Start processing in the background
-            threading.Thread(target=lambda: sentiment_analysis_service.batch_analysis(db, doc, user.id)).start()
+            # threading.Thread(target=lambda: sentiment_analysis_service.batch_analysis(db, doc, user.id)).start()
+            threading.Thread(target=lambda: sentiment_analysis_service.batch_analysis(db, doc, user.id, predict_function)).start()
             st.success(generate_message("Batch analysis started"))

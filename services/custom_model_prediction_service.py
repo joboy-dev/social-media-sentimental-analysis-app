@@ -17,15 +17,15 @@ class CustomPredictionService:
         # Apply the same preprocessing to the input text to match the model's input format (TF-IDF)
         text = clean_text(text)  # Apply the same preprocessing
         text_tfidf = self.vectorizer.transform([text])
-        prediction = self.model.predict(text_tfidf)[0]
+        prediction = int(self.model.predict(text_tfidf)[0]) + 1
         
         prediction_str = ""
-        if prediction == 0:
+        if prediction == 1:
             prediction_str = "Negative"
-        elif prediction == 1:
+        elif prediction == 2:
             prediction_str = "Positive"
             
-        return prediction_str, prediction+1
+        return prediction_str, prediction
 
 
 custom_prediction_service = CustomPredictionService()

@@ -10,23 +10,34 @@ from services.fasttext_prediction_service import fasttext_prediction
 class SentimentalAnalysisService:
     
     def create(self, db: Session, label_str: str, label: int, text: str, user_id: str):
-        sentiment = SentimentAnalysis.create(
-            db,
-            label_str=label_str,
-            label=label,
-            text=text,
-            user_id=user_id
-        )
-        st.success(generate_message("Prediction saved successfully"))
-        return sentiment
+        try:
+            sentiment = SentimentAnalysis.create(
+                db,
+                label_str=label_str,
+                label=label,
+                text=text,
+                user_id=user_id
+            )
+            st.success(generate_message("Prediction saved successfully"))
+            return sentiment
+        except Exception as e:
+            print(e)
+            db.rollback()
+            st.error(generate_message('An unexpected error occured. Try again later', 'error'))
         
     def create_batch(self, db: Session, data, user_id: str):
-        BatchSentimentAnalysis.create(
-            db,
-            data=data,
-            user_id=user_id
-        )
-        st.success(generate_message("Prediction saved successfully"))
+        try:    
+            BatchSentimentAnalysis.create(
+                db,
+                data=data,
+                user_id=user_id
+            )
+            st.success(generate_message("Prediction saved successfully"))
+        
+        except Exception as e:
+            print(e)
+            db.rollback()
+            st.error(generate_message('An unexpected error occured. Try again later', 'error'))
     
     def get_all(self, db: Session):
         query = db.query(SentimentAnalysis).order_by(SentimentAnalysis.created_at.desc())
@@ -46,7 +57,8 @@ class SentimentalAnalysisService:
         batch_sentiment = db.get(BatchSentimentAnalysis, id)
         return batch_sentiment
     
-    def batch_analysis(self, db: Session, document: str | List[str], user_id: str):
+    # def batch_analysis(self, db: Session, document: str | List[str], user_id: str):
+    def batch_analysis(self, db: Session, document: str | List[str], user_id: str, predict_func):
         if document is None:
             st.error(generate_message("No document provided.", "error"))
             return
@@ -65,7 +77,8 @@ class SentimentalAnalysisService:
         
         for text in doc_list:
             if text.strip()!= '':
-                prediction_str, prediction = fasttext_prediction.make_prediction(text)
+                # prediction_str, prediction = fasttext_prediction.make_prediction(text)
+                prediction_str, prediction = predict_func(text)
                 # Save prediction to database
                 sentiment_analysis = self.create(
                     db,

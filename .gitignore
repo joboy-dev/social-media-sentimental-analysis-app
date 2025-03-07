@@ -180,3 +180,4 @@ utils/firebase_config.py
 models/*.ftz
 models/*.pkl
 data/
+testbase.zip

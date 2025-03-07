@@ -19,8 +19,8 @@ tab1, tab2 = st.tabs(['Single', 'Batch'])
 
 # Add option to select model
 MODELS = {
-    'FastText': fasttext_prediction.make_prediction,
-    'Custom': custom_prediction_service.make_prediction
+    'FastText model (More accurate)': fasttext_prediction.make_prediction,
+    'Custom model (Allows for Yoruba, Ibo, Hausa, and Pidgin languages but less accurate than FastText)': custom_prediction_service.make_prediction
 }
 selected_model = st.sidebar.radio('Prediction models', MODELS.keys())
 

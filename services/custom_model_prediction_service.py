@@ -5,8 +5,8 @@ import joblib
 class CustomPredictionService:
     def __init__(self):
         # Load the model and vectorizer
-        self.model = joblib.load("models/sentiment_model.pkl")
-        self.vectorizer = joblib.load("models/tfidf_vectorizer.pkl")
+        self.model = joblib.load("models/2-sentiment_model.pkl")
+        self.vectorizer = joblib.load("models/2-tfidf_vectorizer.pkl")
 
     def make_prediction(self, text: str):
         def clean_text(text: str):
@@ -24,6 +24,8 @@ class CustomPredictionService:
             prediction_str = "Negative"
         elif prediction == 2:
             prediction_str = "Positive"
+        else:
+            prediction_str="Neutral"
             
         return prediction_str, prediction
 

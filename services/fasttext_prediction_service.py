@@ -50,6 +50,8 @@ class FasttextPrediction:
             prediction_str = "Positive"
         elif prediction == 1:
             prediction_str = "Negative"
+        else:
+            prediction_str="Neutral"
             
         return prediction_str, prediction
 

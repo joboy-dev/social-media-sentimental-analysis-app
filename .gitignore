@@ -177,7 +177,7 @@ cython_debug/
 tmp
 utils/serviceAccount.json
 utils/firebase_config.py
-models/*.ftz
-models/*.pkl
+# models/*.ftz
+# models/*.pkl
 data/
-testbase.zip
+*.zip

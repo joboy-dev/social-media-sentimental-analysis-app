@@ -173,7 +173,7 @@ cython_debug/
 # othets
 .history
 .streamlit
-*.db
+# *.db
 tmp
 # utils/serviceAccount.json
 # utils/firebase_config.py
